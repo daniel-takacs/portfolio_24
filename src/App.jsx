@@ -1,10 +1,13 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import { Home, About, Projects, Contact } from './pages'
+import { NavigationProvider } from './components/NavigationContext'; // Import the context provider
 
 function App() {
-  return <main className="bg-main">
+  return <main>
     <Router>
+    <NavigationProvider> {/* Wrap your component tree with the context provider */}
+
         <NavBar />
         <Routes>
             <Route path="/" element={<Home />}/>
@@ -12,6 +15,8 @@ function App() {
             <Route path="/projects" element={<Projects />}/>
             <Route path="/contact" element={<Contact />}/>
         </Routes>
+        </NavigationProvider>
+
     </Router>
   </main>;
 }

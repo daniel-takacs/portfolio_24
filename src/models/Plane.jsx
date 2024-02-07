@@ -2,16 +2,49 @@ import { useRef, useState, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import planeScene from '../assets/3d/plane.glb';
+import { useNavigation, } from "../components/NavigationContext"; // Import the navigation context hook
 
 const Plane = ({ ...props }) => {
     const group = useRef();
     const { nodes, animations } = useGLTF(planeScene);
+
+    const { animatePlane, setAnimatePlane  } = useNavigation(); // Use the context
+
+    
     const { actions } = useAnimations(animations, group);
     const { camera, gl } = useThree();
     const [isInteracting, setIsInteracting] = useState(false);
     const [rotation, setRotation] = useState([0, 0.5, 0]);
     const lastPosition = useRef({ x: 0, y: 0 });
-
+    useEffect(() => {
+        // Animation trigger effect
+        if (animatePlane) {
+          // Example animation logic: move plane to the right
+          let targetPosition = 5; // Target position to move the plane off-screen
+          let animationDuration = 1.5; // Duration in seconds
+          let startTime = Date.now();
+    
+          const animate = () => {
+            let currentTime = Date.now();
+            let timeElapsed = (currentTime - startTime) / 1000; // Convert to seconds
+            if (timeElapsed < animationDuration) {
+              let newPosition = ((timeElapsed / animationDuration) * targetPosition);
+              if (group.current) {
+                group.current.position.x = newPosition;
+              }
+              requestAnimationFrame(animate);
+            } else {
+              if (group.current) {
+                group.current.position.x = targetPosition; // Ensure final position is set
+              }
+              setAnimatePlane(false); // Reset animation state
+            }
+          };
+    
+          animate();
+        }
+      }, [animatePlane, setAnimatePlane]);
+    
     useEffect(() => {
         camera.position.set(0, 0.3, 5);
         gl.domElement.style.touchAction = 'none'; // Disable touch action
