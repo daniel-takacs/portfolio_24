@@ -4,7 +4,7 @@ import { Home, About, Projects, Contact } from './pages'
 import { NavigationProvider } from './components/NavigationContext'; // Import the context provider
 
 function App() {
-  return <main>
+  return <main className="bg-neutral-300	">
     <Router>
     <NavigationProvider> {/* Wrap your component tree with the context provider */}
 

@@ -7,10 +7,7 @@ import { useNavigation, } from "../components/NavigationContext"; // Import the 
 const Plane = ({ ...props }) => {
     const group = useRef();
     const { nodes, animations } = useGLTF(planeScene);
-
     const { animatePlane, setAnimatePlane  } = useNavigation(); // Use the context
-
-    
     const { actions } = useAnimations(animations, group);
     const { camera, gl } = useThree();
     const [isInteracting, setIsInteracting] = useState(false);
