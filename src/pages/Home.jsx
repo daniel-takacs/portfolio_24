@@ -7,10 +7,10 @@ const Home = () => {
     <section className="w-full h-screen relative">
       <div className="absolute top-40 left-0 right-0 z-10 flex items-center justify-center">
         </div>
-        <Canvas>
+        <Canvas camera={{ fov: 25, near: 0.1, far: 1000 }}>
             <Suspense fallback={null}>
-                <directionalLight position={[1, 1, 1]}/>
-                <ambientLight intensity={0} />
+                <directionalLight position={[10, 10, 10]}/>
+                <ambientLight intensity={1} />
                 <Plane />
             </Suspense>
         </Canvas>
