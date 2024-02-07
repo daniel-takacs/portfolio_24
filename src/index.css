@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.header {
+  @apply flex justify-center items-center sm:px-16 px-8 py-4 max-w-5xl mx-auto absolute top-0 left-0 right-0 bg-transparent z-10;
+}
