@@ -3,8 +3,10 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import planeScene from '../assets/3d/plane.glb';
 import { useNavigation, } from "../components/NavigationContext"; // Import the navigation context hook
+import {a} from '@react-spring/three'
 
-const Plane = ({ ...props }) => {
+const Plane = ({ setStage, ...props }) => {
+
     const group = useRef();
     const { nodes, animations } = useGLTF(planeScene);
     const { animatePlane, setAnimatePlane  } = useNavigation(); // Use the context
@@ -13,6 +15,9 @@ const Plane = ({ ...props }) => {
     const [isInteracting, setIsInteracting] = useState(false);
     const [rotation, setRotation] = useState([0, 0.5, 0]);
     const lastPosition = useRef({ x: 0, y: 0 });
+    const rotationSpeed = useRef(0);
+    const dampingFactor = 0.95;
+
     useEffect(() => {
         // Animation trigger effect
         if (animatePlane) {
@@ -43,7 +48,7 @@ const Plane = ({ ...props }) => {
       }, [animatePlane, setAnimatePlane]);
     
     useEffect(() => {
-        camera.position.set(0, 0.3, 5);
+        camera.position.set(0, 0.4, 5);
         gl.domElement.style.touchAction = 'none'; // Disable touch action
     }, [camera, gl.domElement.style]);
 
@@ -79,6 +84,27 @@ const Plane = ({ ...props }) => {
 
     // Apply rotation
     useFrame(() => {
+      if (!isInteracting) {
+        rotationSpeed.current *= dampingFactor;
+        group.current.rotation.y += rotationSpeed.current;
+      } else {
+        const rotation = group.current.rotation.y;
+        const normalizedRotation = ((rotation % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+    
+        // Set the current stage based on the plane's orientation
+        if (normalizedRotation >= 5.45 && normalizedRotation <= 5.85) {
+          setStage(4);
+        } else if (normalizedRotation >= 0.85 && normalizedRotation <= 1.7) {
+          setStage(3);
+        } else if (normalizedRotation >= 2 && normalizedRotation <= 3) {
+          setStage(2);
+        } else if (normalizedRotation >= 3.25 && normalizedRotation <= 4.75) {
+          setStage(1);
+        } else {
+          setStage(null);
+        }
+      }
+      
         if (group.current) {
             group.current.rotation.x = rotation[0];
             group.current.rotation.y = rotation[1];
@@ -107,9 +133,9 @@ const Plane = ({ ...props }) => {
     }, [actions, isInteracting, rotation, gl.domElement, handleMouseDown, handleMouseMove, handleMouseUp, handleTouchEnd, handleTouchMove, handleTouchStart]); // Re-bind if dependencies change
 
     return (
-        <group ref={group} {...props}>
+        <a.group ref={group} {...props}>
             <primitive object={nodes.Sketchfab_model} />
-        </group>
+        </a.group>
     );
 }
 
