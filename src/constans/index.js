@@ -182,7 +182,7 @@ export const projects = [
         theme: 'btn-back-yellow',
         name: 'Portfolio',
         description: 'In this project, I constructed a responsive 3D animated portfolio website leveraging the synergies between React, React Fiber, Three.js, and Tailwind CSS. This fusion of technologies allowed me to create an immersive, interactive web experience that showcases my technical prowess and creative vision.',
-        link: 'https://github.com/',
+        link: 'https://github.com/daniel-takacs/portfolio_24',
     },
     {
         iconUrl: todo,
